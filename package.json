@@ -19,5 +19,15 @@
   "bugs": {
     "url": "https://github.com/eiskalteschatten/rss-to-email/issues"
   },
-  "homepage": "https://github.com/eiskalteschatten/rss-to-email#readme"
+  "homepage": "https://github.com/eiskalteschatten/rss-to-email#readme",
+  "devDependencies": {
+    "@types/node": "^18.16.1",
+    "@types/nodemailer": "^6.4.7",
+    "husky": "^8.0.3",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.1"
+  }
 }
