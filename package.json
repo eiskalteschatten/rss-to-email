@@ -2,9 +2,12 @@
   "name": "rss-to-email",
   "version": "1.0.0",
   "description": "A client for sending RSS feeds to an email address.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
