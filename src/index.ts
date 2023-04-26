@@ -1,6 +1,6 @@
 import feeds from './Feeds';
 
-function main() {
+function main(): void {
   feeds.setupCronjob();
   feeds.fetchAll();
 }

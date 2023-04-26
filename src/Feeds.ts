@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import config from '../config';
 
 class Feeds {
-  setupCronjob() {
+  setupCronjob(): void {
     if (!cron.validate(config.feeds.cronjob)) {
       throw new Error(`Your cronjob config "(${config.feeds.cronjob}" is invalid!`);
     }
@@ -11,7 +11,7 @@ class Feeds {
     cron.schedule(config.feeds.cronjob, this.fetchAll);
   }
 
-  fetchAll() {
+  fetchAll(): void {
     console.log('Feeds fetched');
   }
 }
