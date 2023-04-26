@@ -10,11 +10,17 @@ async function importOPML(): Promise<void> {
     throw new Error(`Your source file ("${sourceFile}") is invalid!`);
   }
 
-  const feedsJson = xmljs.xml2json(sourceFile, {
+  console.log(`Importing from ${sourceFile}...`);
+
+  const opml = await fs.promises.readFile(sourceFile, 'utf8');
+
+  const feedsJson = xmljs.xml2json(opml, {
     spaces: 2,
   });
 
   await fs.promises.writeFile(FEED_CONFIG_FILE, feedsJson);
+
+  console.log(`Finished importing to ${FEED_CONFIG_FILE}`);
 }
 
 importOPML();
