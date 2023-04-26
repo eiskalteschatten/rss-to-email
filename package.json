@@ -39,6 +39,7 @@
   "dependencies": {
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.1",
-    "rss-parser": "^3.13.0"
+    "rss-parser": "^3.13.0",
+    "xml-js": "^1.6.11"
   }
 }
