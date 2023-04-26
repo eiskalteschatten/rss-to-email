@@ -1,0 +1,23 @@
+{
+  "name": "rss-to-email",
+  "version": "1.0.0",
+  "description": "A client for sending RSS feeds to an email address.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eiskalteschatten/rss-to-email.git"
+  },
+  "keywords": [
+    "rss",
+    "email"
+  ],
+  "author": "Alex Seifert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eiskalteschatten/rss-to-email/issues"
+  },
+  "homepage": "https://github.com/eiskalteschatten/rss-to-email#readme"
+}
