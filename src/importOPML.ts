@@ -18,6 +18,9 @@ async function importOPML(): Promise<void> {
     spaces: 2,
   });
 
+  // TODO: transform to a more usable structure before saving
+
+
   await fs.promises.writeFile(FEED_CONFIG_FILE, feedsJson);
 
   console.log(`Finished importing to ${FEED_CONFIG_FILE}`);
