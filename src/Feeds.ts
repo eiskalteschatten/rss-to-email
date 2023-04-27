@@ -98,7 +98,7 @@ class Feeds {
     }
 
     const mailer = new Mailer();
-    await mailer.sendMail(feedData);
+    await mailer.sendFeedMail(feedData);
   }
 }
 

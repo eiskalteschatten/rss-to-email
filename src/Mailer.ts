@@ -16,12 +16,14 @@ class Mailer {
     });
   }
 
-  async sendMail(feedData: FeedData): Promise<void> {
+  async sendFeedMail(feedData: FeedData): Promise<void> {
+    const body = `${feedData.item.content}<br /><br /><a href="${feedData.item.link}">Visit Website</a>`;
+
     await this.transporter.sendMail({
       from: config.mailer.from,
       to: config.mailer.to,
       subject: `${feedData.categoryTitle}: ${feedData.item.title}`,
-      html: this.generateHtml(feedData.item.title, feedData.item.content),
+      html: this.generateHtml(feedData.item.title, body),
     });
   }
 
