@@ -17,7 +17,7 @@ class Mailer {
   }
 
   async sendFeedMail(feedData: FeedData): Promise<void> {
-    const body = `${feedData.item.content}<br /><br /><a href="${feedData.item.link}">Visit Website</a>`;
+    const body = `${feedData.item.content}<br /><hr /><br /><a href="${feedData.item.link}">Visit Website</a>`;
 
     await this.transporter.sendMail({
       from: config.mailer.from,
