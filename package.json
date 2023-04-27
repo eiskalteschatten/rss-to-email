@@ -4,7 +4,7 @@
   "description": "A client for sending RSS feeds to an email address.",
   "main": "dist/src/index.js",
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --rs --inspect=0.0.0.0:9229 -- src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --rs --inspect=0.0.0.0:9229 -- src/index.ts",
     "build": "tsc",
     "start": "node dist/src/index.js",
     "watch": "tsc --watch",
@@ -31,6 +31,7 @@
     "@types/node-cron": "^3.0.7",
     "@types/nodemailer": "^6.4.7",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.39.0",
     "eslint-plugin-import": "^2.27.5",
     "husky": "^8.0.3",
