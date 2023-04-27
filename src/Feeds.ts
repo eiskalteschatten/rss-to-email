@@ -4,6 +4,7 @@ import Parser from 'rss-parser';
 import config from '../config';
 import { FEED_CONFIG_FILE } from './constants';
 import { FeedCategory } from './interfaces';
+import Mailer from './Mailer';
 
 class Feeds {
   setupCronjob(): void {
@@ -16,6 +17,8 @@ class Feeds {
   }
 
   async fetchAll(): Promise<void> {
+    console.log('Fetching feeds...');
+
     const feedCategories: FeedCategory[] = await import(FEED_CONFIG_FILE);
     const parser = new Parser();
 
@@ -30,9 +33,14 @@ class Feeds {
       }
     }
 
-    console.log('Feeds fetched');
+    console.log('Feeds fetched, sending emails...');
+  }
 
+  private async sendEmails(): Promise<void> {
+    // TODO: cache fetched feeds so that emails are not sent multiple times
     // TODO: email them
+
+    // const mailer = new Mailer();
   }
 }
 
