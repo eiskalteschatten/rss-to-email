@@ -25,8 +25,9 @@ class Feeds {
       const parser = new Parser();
 
       for (const category of feedCategories) {
-
         for (const feed of category.feeds) {
+          console.log(`Fetching "${feed.title}" from "${feed.xmlUrl}"...`);
+
           const parsedFeed = await parser.parseURL(feed.xmlUrl);
           console.log(parsedFeed.title);
 
