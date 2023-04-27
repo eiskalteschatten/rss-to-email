@@ -47,10 +47,20 @@ class FeedItemCache {
         return;
       }
 
+      const feedCacheItemsRef = await this.readCacheFile();
+      const feedCacheItems = [...feedCacheItemsRef];
       const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
 
-      // TODO: clean up cached items that are older than whatever date is configured for
-      // feeds that should be sent (same config as in the Feeds->fetchAll() function)
+      for (const index in feedCacheItems) {
+        const item = feedCacheItems[index];
+        const itemDate = new Date(item.pubDate);
+
+        if (itemDate <= oldestFeedToSendDate) {
+          delete feedCacheItems[index];
+        }
+      }
+
+      await this.writeCacheFile(JSON.stringify(feedCacheItems));
 
       console.log('The feed item cache has been cleaned up.');
     }
