@@ -1,5 +1,6 @@
 node_modules
 dist
 
-feeds.json
 config.js
+feeds.json
+feedCache.json

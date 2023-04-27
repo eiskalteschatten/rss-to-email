@@ -32,6 +32,8 @@ class Feeds {
           console.log(parsedFeed.title);
 
           for (const item of parsedFeed.items) {
+            // TODO: only do anything with the item if it's newer than a configurable date
+
             const feedData: FeedData = {
               categoryTitle: category.title,
               item,
