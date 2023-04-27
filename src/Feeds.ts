@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import Parser from 'rss-parser';
+import Parser, { Item } from 'rss-parser';
 import fsPromises from 'node:fs/promises';
 
 import config from '../config';
@@ -7,6 +7,7 @@ import { FEED_FILE } from './constants';
 import { FeedCategory, FeedData } from './interfaces';
 import Mailer from './Mailer';
 import { handleError } from './errors';
+import FeedItemCache from './FeedItemCache';
 
 class Feeds {
   setupCronjob(): void {
@@ -25,6 +26,7 @@ class Feeds {
       const feedCategoriesString = await fsPromises.readFile(FEED_FILE, 'utf8');
       const feedCategories: FeedCategory[] = JSON.parse(feedCategoriesString);
       const parser = new Parser();
+      const allFeedItems: Item[] = [];
 
       for (const category of feedCategories) {
         for (const feed of category.feeds) {
@@ -35,7 +37,6 @@ class Feeds {
 
           for (const item of parsedFeed.items) {
             // TODO: only do anything with the item if it's newer than a configurable date
-            // TODO: cache feed so that emails are not sent multiple times
 
             const feedData: FeedData = {
               categoryTitle: category.title,
@@ -43,9 +44,13 @@ class Feeds {
             };
 
             await this.sendEmail(feedData);
+            allFeedItems.push(item);
           }
         }
       }
+
+      const feedItemCache = new FeedItemCache();
+      await feedItemCache.cacheFeedItems(allFeedItems);
 
       console.log('Feeds fetched and emails sent.');
     }
