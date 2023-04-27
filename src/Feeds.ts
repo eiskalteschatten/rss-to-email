@@ -33,7 +33,6 @@ class Feeds {
           console.log(`Fetching "${feed.title}" from "${feed.xmlUrl}"...`);
 
           const parsedFeed = await parser.parseURL(feed.xmlUrl);
-          console.log(parsedFeed.title);
 
           for (const item of parsedFeed.items) {
             const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
