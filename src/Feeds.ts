@@ -1,5 +1,6 @@
 import cron from 'node-cron';
 import Parser from 'rss-parser';
+import fsPromises from 'node:fs/promises';
 
 import config from '../config';
 import { FEED_FILE } from './constants';
@@ -21,7 +22,8 @@ class Feeds {
     try {
       console.log('Fetching feeds...');
 
-      const feedCategories: FeedCategory[] = await import(FEED_FILE);
+      const feedCategoriesString = await fsPromises.readFile(FEED_FILE, 'utf8');
+      const feedCategories: FeedCategory[] = JSON.parse(feedCategoriesString);
       const parser = new Parser();
 
       for (const category of feedCategories) {
