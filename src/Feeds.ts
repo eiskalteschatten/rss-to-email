@@ -39,6 +39,7 @@ class Feeds {
             const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
             const itemDate = new Date(item.pubDate);
 
+            // If the item is older than the set date, ignore it
             if (itemDate <= oldestFeedToSendDate) {
               continue;
             }
