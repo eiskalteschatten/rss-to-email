@@ -10,7 +10,7 @@ import { handleError } from './errors';
 class Feeds {
   setupCronjob(): void {
     if (!cron.validate(config.feeds.cronjob)) {
-      handleError(`Your cronjob config "(${config.feeds.cronjob}" is invalid!`);
+      handleError(`Your feed cronjob config "(${config.feeds.cronjob}" is invalid!`);
       return;
     }
 
@@ -45,7 +45,7 @@ class Feeds {
         }
       }
 
-      console.log('Feeds fetched, sending emails...');
+      console.log('Feeds fetched and emails sent.');
     }
     catch (error) {
       handleError(error);

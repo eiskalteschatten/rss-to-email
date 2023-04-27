@@ -2,6 +2,8 @@ module.exports = {
   feeds: {
     // Fetch feeds every 10 minutes by default
     cronjob: '*/10 * * * *',
+    // Clean up the cache every Monday
+    cacheCleanupCronjob: '0 0 * * MON',
   },
   mailer: {
     from: 'fromaddress@email.com',
