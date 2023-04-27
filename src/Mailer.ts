@@ -6,7 +6,7 @@ import config from '../config';
 class Mailer {
   private transporter: Transporter;
 
-  constructor(private feedData: FeedData) {
+  constructor() {
     const { mailer: { smtp } } = config;
 
     this.transporter = nodemailer.createTransport({
@@ -16,24 +16,33 @@ class Mailer {
     });
   }
 
-  async sendMail(): Promise<void> {
+  async sendMail(feedData: FeedData): Promise<void> {
     await this.transporter.sendMail({
       from: config.mailer.from,
       to: config.mailer.to,
-      subject: `${this.feedData.categoryTitle}: ${this.feedData.title}`,
-      html: this.generateHtml(),
+      subject: `${feedData.categoryTitle}: ${feedData.title}`,
+      html: this.generateHtml(feedData.title, feedData.body),
     });
   }
 
-  private generateHtml(): string {
+  private generateHtml(title: string, body: string): string {
     return `<html>
       <head>
-        <title>${this.feedData.title}</title>
+        <title>${title}</title>
       </head>
       <body>
-        ${this.feedData.body}
+        ${body}
       </body>
     </html>`;
+  }
+
+  async sendErrorMail(body: string, title = 'An Error Occurred'): Promise<void> {
+    await this.transporter.sendMail({
+      from: config.mailer.from,
+      to: config.mailer.to,
+      subject: title,
+      html: this.generateHtml(title, body),
+    });
   }
 }
 

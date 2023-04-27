@@ -5,11 +5,12 @@ import config from '../config';
 import { FEED_CONFIG_FILE } from './constants';
 import { FeedCategory, FeedData } from './interfaces';
 import Mailer from './Mailer';
+import { handleError } from './errors';
 
 class Feeds {
   setupCronjob(): void {
     if (!cron.validate(config.feeds.cronjob)) {
-      console.error(`Your cronjob config "(${config.feeds.cronjob}" is invalid!`);
+      handleError(`Your cronjob config "(${config.feeds.cronjob}" is invalid!`);
       return;
     }
 
@@ -38,7 +39,7 @@ class Feeds {
       console.log('Feeds fetched, sending emails...');
     }
     catch (error) {
-      console.error(error);
+      handleError(error);
     }
   }
 
@@ -46,8 +47,8 @@ class Feeds {
     // TODO: cache fetched feeds so that emails are not sent multiple times
     // TODO: email them
 
-    const mailer = new Mailer(feedData);
-    await mailer.sendMail();
+    const mailer = new Mailer();
+    await mailer.sendMail(feedData);
   }
 }
 
