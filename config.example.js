@@ -16,7 +16,7 @@ module.exports = {
     from: 'fromaddress@email.com',
     to: 'toaddress@email.com',
     smtp: {
-      host: 'smpt.xxx.com',
+      host: 'smtp.xxx.com',
       port: 465,
       auth: {
         user: 'someuser@email.com',
