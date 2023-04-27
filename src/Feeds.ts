@@ -27,6 +27,7 @@ class Feeds {
       const feedCategories: FeedCategory[] = JSON.parse(feedCategoriesString);
       const parser = new Parser();
       const allFeedItems: Item[] = [];
+      const feedItemCache = new FeedItemCache();
 
       for (const category of feedCategories) {
         for (const feed of category.feeds) {
@@ -40,6 +41,13 @@ class Feeds {
 
             // If the item is older than the set date, ignore it
             if (itemDate <= oldestFeedToSendDate) {
+              continue;
+            }
+
+            const isCached = await feedItemCache.itemIsInCache(item);
+
+            // If the item is cached, skip it
+            if (isCached) {
               continue;
             }
 
@@ -65,7 +73,6 @@ class Feeds {
         break;
       }
 
-      const feedItemCache = new FeedItemCache();
       await feedItemCache.cacheFeedItems(allFeedItems);
 
       console.log('Feeds fetched and emails sent.');

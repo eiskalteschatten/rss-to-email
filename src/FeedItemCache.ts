@@ -8,6 +8,21 @@ import { FEED_CACHE_FILE } from './constants';
 import { FeedCacheItem } from './interfaces';
 
 class FeedItemCache {
+  async itemIsInCache(item: Item): Promise<boolean> {
+    try {
+      const feedCacheItemsRef = await this.readCacheFile();
+
+      return feedCacheItemsRef.some(_item =>
+        item.guid === _item.guid
+        && item.pubDate === _item.pubDate
+        && item.link === _item.link
+      );
+    }
+    catch (error) {
+      handleError(error);
+    }
+  }
+
   async cacheFeedItems(items: Item[]): Promise<void> {
     try {
       const feedCacheItemsRef = await this.readCacheFile();
