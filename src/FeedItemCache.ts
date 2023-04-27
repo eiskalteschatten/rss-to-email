@@ -30,6 +30,7 @@ class FeedItemCache {
 
       for (const item of items) {
         const feedCacheItem: FeedCacheItem = {
+          title: item.title,
           guid: item.guid,
           pubDate: item.pubDate,
           link: item.link,

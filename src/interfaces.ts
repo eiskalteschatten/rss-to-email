@@ -42,6 +42,7 @@ export interface FeedData {
 }
 
 export interface FeedCacheItem {
+  title: string;
   guid: string;
   pubDate: string;
   link: string;
