@@ -17,24 +17,29 @@ class Feeds {
   }
 
   async fetchAll(): Promise<void> {
-    console.log('Fetching feeds...');
+    try {
+      console.log('Fetching feeds...');
 
-    const feedCategories: FeedCategory[] = await import(FEED_CONFIG_FILE);
-    const parser = new Parser();
+      const feedCategories: FeedCategory[] = await import(FEED_CONFIG_FILE);
+      const parser = new Parser();
 
-    for (const category of feedCategories) {
-      for (const feed of category.feeds) {
-        const parsedFeed = await parser.parseURL(feed.xmlUrl);
-        console.log(parsedFeed.title);
+      for (const category of feedCategories) {
+        for (const feed of category.feeds) {
+          const parsedFeed = await parser.parseURL(feed.xmlUrl);
+          console.log(parsedFeed.title);
 
-        for (const item of parsedFeed.items) {
-          // TODO: do something with the items
-          console.log(item);
+          for (const item of parsedFeed.items) {
+            // TODO: do something with the items
+            console.log(item);
+          }
         }
       }
-    }
 
-    console.log('Feeds fetched, sending emails...');
+      console.log('Feeds fetched, sending emails...');
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
   private async sendEmails(feedData: FeedData): Promise<void> {
