@@ -5,50 +5,45 @@ import { FEED_FILE } from './constants';
 import { Feed, FeedCategory, OPML } from './interfaces';
 
 function transform(feedsJson: string): FeedCategory[] {
-  try {
-    const parsedFeeds = JSON.parse(feedsJson) as OPML;
-    const { elements } = parsedFeeds;
-    const allFeeds: FeedCategory[] = [];
+  const parsedFeeds = JSON.parse(feedsJson) as OPML;
+  const { elements } = parsedFeeds;
+  const allFeeds: FeedCategory[] = [];
 
-    for (const elementLayer1 of elements) {
-      for (const elementLayer2 of elementLayer1.elements) {
-        for (const elementLayer3 of elementLayer2.elements) {
-          const category = elementLayer3.attributes;
-          const feeds = elementLayer3.elements;
-          const categoryFeeds: Feed[] = [];
+  for (const elementLayer1 of elements) {
+    for (const elementLayer2 of elementLayer1.elements) {
+      for (const elementLayer3 of elementLayer2.elements) {
+        const category = elementLayer3.attributes;
+        const feeds = elementLayer3.elements;
+        const categoryFeeds: Feed[] = [];
 
-          if (!category) {
+        if (!category) {
+          continue;
+        }
+
+        for (const feed of feeds) {
+          const { attributes } = feed;
+
+          if (!attributes || !attributes.title || !attributes.xmlUrl || !attributes.htmlUrl) {
+            console.error(`Invalid feed for ${JSON.stringify(attributes)}! Skipping...`);
             continue;
           }
 
-          for (const feed of feeds) {
-            const { attributes } = feed;
-
-            if (!attributes || !attributes.title || !attributes.xmlUrl || !attributes.htmlUrl) {
-              console.error(`Invalid feed for ${JSON.stringify(attributes)}! Skipping...`);
-              continue;
-            }
-
-            categoryFeeds.push({
-              title: attributes.title.trim(),
-              xmlUrl: attributes.xmlUrl,
-              htmlUrl: attributes.htmlUrl,
-            });
-          }
-
-          allFeeds.push({
-            title: category.title.trim() || 'Uncategorized',
-            feeds: categoryFeeds,
+          categoryFeeds.push({
+            title: attributes.title.trim(),
+            xmlUrl: attributes.xmlUrl,
+            htmlUrl: attributes.htmlUrl,
           });
         }
+
+        allFeeds.push({
+          title: category.title.trim() || 'Uncategorized',
+          feeds: categoryFeeds,
+        });
       }
     }
+  }
 
-    return allFeeds;
-  }
-  catch (error) {
-    throw error;
-  }
+  return allFeeds;
 }
 
 async function importOPML(): Promise<void> {

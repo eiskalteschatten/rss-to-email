@@ -31,7 +31,7 @@ module.exports = {
     'arrow-parens': ['error', 'as-needed'],
     'no-param-reassign': 'off',
     'no-async-promise-executor': 'off',
-    'no-useless-catch': 'off',
+    'no-useless-catch': ['error'],
     'object-curly-spacing': ['error', 'always'],
     'keyword-spacing':  ['error', {
       'before': true,
