@@ -13,7 +13,7 @@ module.exports = {
     },
   },
   mailer: {
-    from: 'fromaddress@email.com',
+    from: 'Rss To Email <fromaddress@email.com>',
     to: 'toaddress@email.com',
     smtp: {
       host: 'smtp.xxx.com',
