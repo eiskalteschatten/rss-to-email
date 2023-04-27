@@ -47,7 +47,8 @@ class FeedItemCache {
         return;
       }
 
-      // TODO
+      // TODO: clean up cached items that are older than whatever date is configured for
+      // feeds that should be sent (same config as in the Feeds->fetchAll() function)
 
       console.log('The feed item cache has been cleaned up.');
     }
