@@ -47,6 +47,8 @@ class FeedItemCache {
         return;
       }
 
+      const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
+
       // TODO: clean up cached items that are older than whatever date is configured for
       // feeds that should be sent (same config as in the Feeds->fetchAll() function)
 

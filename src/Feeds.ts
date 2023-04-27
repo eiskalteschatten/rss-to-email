@@ -36,7 +36,12 @@ class Feeds {
           console.log(parsedFeed.title);
 
           for (const item of parsedFeed.items) {
-            // TODO: only do anything with the item if it's newer than a configurable date
+            const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
+            const itemDate = new Date(item.pubDate);
+
+            if (itemDate <= oldestFeedToSendDate) {
+              continue;
+            }
 
             const feedData: FeedData = {
               categoryTitle: category.title,
