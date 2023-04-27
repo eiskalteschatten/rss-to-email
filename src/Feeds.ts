@@ -51,8 +51,6 @@ class Feeds {
               continue;
             }
 
-            // TODO: if item is in cache, skip it
-
             const feedData: FeedData = {
               categoryTitle: category.title,
               item,
