@@ -49,17 +49,12 @@ class FeedItemCache {
       }
 
       const feedCacheItemsRef = await this.readCacheFile();
-      const feedCacheItems = [...feedCacheItemsRef];
       const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
 
-      for (const index in feedCacheItems) {
-        const item = feedCacheItems[index];
+      const feedCacheItems = feedCacheItemsRef.filter(item => {
         const itemDate = new Date(item.pubDate);
-
-        if (itemDate <= oldestFeedToSendDate) {
-          delete feedCacheItems[index];
-        }
-      }
+        return itemDate < oldestFeedToSendDate;
+      });
 
       await this.writeCacheFile(JSON.stringify(feedCacheItems));
 
