@@ -39,8 +39,16 @@ class Feeds {
             const oldestFeedToSendDate = config.feeds.oldestFeedToSendDate();
             const itemDate = new Date(item.pubDate);
 
+            if (process.env.NODE_ENV === 'development') {
+              console.debug(`Processing feed item: ${item.title}`);
+            }
+
             // If the item is older than the set date, ignore it
             if (itemDate <= oldestFeedToSendDate) {
+              if (process.env.NODE_ENV === 'development') {
+                console.debug(`Too old: ${item.title}`);
+              }
+
               continue;
             }
 
@@ -48,6 +56,10 @@ class Feeds {
 
             // If the item is cached, skip it
             if (isCached) {
+              if (process.env.NODE_ENV === 'development') {
+                console.log(`Found in cache: ${item.title}`);
+              }
+
               continue;
             }
 
@@ -81,6 +93,10 @@ class Feeds {
   }
 
   private async sendEmail(feedData: FeedData): Promise<void> {
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`Sending email for ${feedData.item.title}`);
+    }
+
     const mailer = new Mailer();
     await mailer.sendMail(feedData);
   }
