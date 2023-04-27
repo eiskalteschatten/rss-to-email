@@ -3,7 +3,7 @@ import Parser from 'rss-parser';
 
 import config from '../config';
 import { FEED_CONFIG_FILE } from './constants';
-import { FeedCategory } from './interfaces';
+import { FeedCategory, FeedData } from './interfaces';
 import Mailer from './Mailer';
 
 class Feeds {
@@ -27,20 +27,22 @@ class Feeds {
         const parsedFeed = await parser.parseURL(feed.xmlUrl);
         console.log(parsedFeed.title);
 
-        parsedFeed.items.forEach(item => {
-          console.log(item.title + ':' + item.link);
-        });
+        for (const item of parsedFeed.items) {
+          // TODO: do something with the items
+          console.log(item);
+        }
       }
     }
 
     console.log('Feeds fetched, sending emails...');
   }
 
-  private async sendEmails(): Promise<void> {
+  private async sendEmails(feedData: FeedData): Promise<void> {
     // TODO: cache fetched feeds so that emails are not sent multiple times
     // TODO: email them
 
-    // const mailer = new Mailer();
+    const mailer = new Mailer(feedData);
+    await mailer.sendMail();
   }
 }
 
