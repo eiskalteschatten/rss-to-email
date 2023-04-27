@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import xmljs from 'xml-js';
 
-import { FEED_CONFIG_FILE } from './constants';
+import { FEED_FILE } from './constants';
 import { Feed, FeedCategory, OPML } from './interfaces';
 
 function transform(feedsJson: string): FeedCategory[] {
@@ -67,9 +67,9 @@ async function importOPML(): Promise<void> {
   });
 
   const transformedFeeds = transform(feedsJson);
-  await fs.promises.writeFile(FEED_CONFIG_FILE, JSON.stringify(transformedFeeds));
+  await fs.promises.writeFile(FEED_FILE, JSON.stringify(transformedFeeds));
 
-  console.log(`Finished importing to ${FEED_CONFIG_FILE}`);
+  console.log(`Finished importing to ${FEED_FILE}`);
 }
 
 importOPML();

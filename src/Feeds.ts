@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import Parser from 'rss-parser';
 
 import config from '../config';
-import { FEED_CONFIG_FILE } from './constants';
+import { FEED_FILE } from './constants';
 import { FeedCategory, FeedData } from './interfaces';
 import Mailer from './Mailer';
 import { handleError } from './errors';
@@ -21,7 +21,7 @@ class Feeds {
     try {
       console.log('Fetching feeds...');
 
-      const feedCategories: FeedCategory[] = await import(FEED_CONFIG_FILE);
+      const feedCategories: FeedCategory[] = await import(FEED_FILE);
       const parser = new Parser();
 
       for (const category of feedCategories) {
