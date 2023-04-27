@@ -87,7 +87,10 @@ class FeedItemCache {
 
       if (fs.existsSync(FEED_CACHE_FILE)) {
         const feedCacheString = await fs.promises.readFile(FEED_CACHE_FILE, 'utf8');
-        feedCacheItems = JSON.parse(feedCacheString);
+
+        if (feedCacheString.length > 0) {
+          feedCacheItems = JSON.parse(feedCacheString);
+        }
       }
 
       return feedCacheItems;
