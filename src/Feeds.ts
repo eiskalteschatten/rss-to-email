@@ -33,6 +33,7 @@ class Feeds {
 
           for (const item of parsedFeed.items) {
             // TODO: only do anything with the item if it's newer than a configurable date
+            // TODO: cache feed so that emails are not sent multiple times
 
             const feedData: FeedData = {
               categoryTitle: category.title,
@@ -52,8 +53,6 @@ class Feeds {
   }
 
   private async sendEmail(feedData: FeedData): Promise<void> {
-    // TODO: cache feed so that emails are not sent multiple times
-
     const mailer = new Mailer();
     await mailer.sendMail(feedData);
   }

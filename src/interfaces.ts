@@ -40,3 +40,9 @@ export interface FeedData {
   categoryTitle: string;
   item: Item;
 }
+
+export interface FeedCacheItem {
+  guid: string;
+  pubDate: string;
+  link: string;
+}
