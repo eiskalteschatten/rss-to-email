@@ -22,7 +22,7 @@ class FeedItemCache {
         feedCacheItems.push(feedCacheItem);
       }
 
-      await fs.promises.writeFile(FEED_CACHE_FILE, JSON.stringify(feedCacheItems));
+      await this.writeCacheFile(JSON.stringify(feedCacheItems));
     }
     catch (error) {
       handleError(error);
@@ -71,6 +71,10 @@ class FeedItemCache {
     catch (error) {
       handleError(error);
     }
+  }
+
+  private async writeCacheFile(feedItems: string): Promise<void> {
+    await fs.promises.writeFile(FEED_CACHE_FILE, feedItems);
   }
 }
 
