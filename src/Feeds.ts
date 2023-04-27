@@ -29,7 +29,6 @@ class Feeds {
       const allFeedItems: Item[] = [];
       const feedItemCache = new FeedItemCache();
 
-
       for (const category of feedCategories) {
         for (const feed of category.feeds) {
           console.log(`Fetching "${feed.title}" from "${feed.xmlUrl}"...`);
