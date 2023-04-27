@@ -36,7 +36,6 @@ export interface OPML {
   elements: OPMLElement[];
 }
 
-// TODO: finalize after fetching feed data
 export interface FeedData {
   categoryTitle: string;
   item: Item;
