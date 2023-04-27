@@ -43,6 +43,8 @@ class Feeds {
               continue;
             }
 
+            // TODO: if item is in cache, skip it
+
             const feedData: FeedData = {
               categoryTitle: category.title,
               item,
@@ -50,8 +52,17 @@ class Feeds {
 
             await this.sendEmail(feedData);
             allFeedItems.push(item);
+
+            // TODO: remove
+            break;
           }
+
+          // TODO: remove
+          break;
         }
+
+        // TODO: remove
+        break;
       }
 
       const feedItemCache = new FeedItemCache();
