@@ -10,7 +10,8 @@ import { FeedCacheItem } from './interfaces';
 class FeedItemCache {
   async cacheFeedItems(items: Item[]): Promise<void> {
     try {
-      const feedCacheItems = await this.readCacheFile();
+      const feedCacheItemsRef = await this.readCacheFile();
+      const feedCacheItems = [...feedCacheItemsRef];
 
       for (const item of items) {
         const feedCacheItem: FeedCacheItem = {
