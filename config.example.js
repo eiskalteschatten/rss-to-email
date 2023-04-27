@@ -4,6 +4,13 @@ module.exports = {
     cronjob: '*/10 * * * *',
     // Clean up the cache every Monday
     cacheCleanupCronjob: '0 0 * * MON',
+    // A function that should return a date object with the oldest date of
+    // the feed items that should be sent. Everything older will be ignored.
+    oldestFeedToSendDate() {
+      const date = new Date();
+      date.setMonth(date.getMonth() - 12);  // 12 months ago
+      return date;
+    },
   },
   mailer: {
     from: 'fromaddress@email.com',
