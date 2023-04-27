@@ -1,3 +1,5 @@
+import { Item } from 'rss-parser';
+
 export interface FeedCategory {
   title: string;
   feeds: Feed[];
@@ -36,7 +38,6 @@ export interface OPML {
 
 // TODO: finalize after fetching feed data
 export interface FeedData {
-  title: string;
-  body: string;
   categoryTitle: string;
+  item: Item;
 }

@@ -25,13 +25,18 @@ class Feeds {
       const parser = new Parser();
 
       for (const category of feedCategories) {
+
         for (const feed of category.feeds) {
           const parsedFeed = await parser.parseURL(feed.xmlUrl);
           console.log(parsedFeed.title);
 
           for (const item of parsedFeed.items) {
-            // TODO: do something with the items
-            console.log(item);
+            const feedData: FeedData = {
+              categoryTitle: category.title,
+              item,
+            };
+
+            await this.sendEmail(feedData);
           }
         }
       }
@@ -43,9 +48,8 @@ class Feeds {
     }
   }
 
-  private async sendEmails(feedData: FeedData): Promise<void> {
-    // TODO: cache fetched feeds so that emails are not sent multiple times
-    // TODO: email them
+  private async sendEmail(feedData: FeedData): Promise<void> {
+    // TODO: cache feed so that emails are not sent multiple times
 
     const mailer = new Mailer();
     await mailer.sendMail(feedData);

@@ -20,8 +20,8 @@ class Mailer {
     await this.transporter.sendMail({
       from: config.mailer.from,
       to: config.mailer.to,
-      subject: `${feedData.categoryTitle}: ${feedData.title}`,
-      html: this.generateHtml(feedData.title, feedData.body),
+      subject: `${feedData.categoryTitle}: ${feedData.item.title}`,
+      html: this.generateHtml(feedData.item.title, feedData.item.content),
     });
   }
 
