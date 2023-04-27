@@ -13,7 +13,8 @@ class FeedItemCache {
       const feedCacheItemsRef = await this.readCacheFile();
 
       return feedCacheItemsRef.some(_item =>
-        item.guid === _item.guid
+        item.title === _item.title
+        && item.guid === _item.guid
         && item.pubDate === _item.pubDate
         && item.link === _item.link
       );
