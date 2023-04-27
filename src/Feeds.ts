@@ -70,9 +70,6 @@ class Feeds {
 
             await this.sendEmail(feedData);
             allFeedItems.push(item);
-
-            // TODO: remove
-            break;
           }
 
           // TODO: remove
@@ -85,7 +82,7 @@ class Feeds {
 
       await feedItemCache.cacheFeedItems(allFeedItems);
 
-      console.log('Feeds fetched and emails sent.');
+      console.log('All feeds fetched and emails sent.');
     }
     catch (error) {
       handleError(error);
