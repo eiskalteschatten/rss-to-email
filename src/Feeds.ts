@@ -71,9 +71,6 @@ class Feeds {
             await this.sendEmail(feedData);
             allFeedItems.push(item);
           }
-
-          // TODO: remove
-          break;
         }
 
         // TODO: remove
