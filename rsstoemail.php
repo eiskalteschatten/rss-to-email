@@ -25,15 +25,21 @@ $mail->Password = $EMAIL_SMTP_PASSWORD;
 
 foreach ($feeds->body->outline as $folder) {
     $folderTitle = (string) $folder['title'];
-    echo "Folder: {$folderTitle}\n";
+
+    if ($DEBUG_MODE) {
+        echo "Folder: {$folderTitle}\n";
+    }
 
     foreach ($folder->outline as $feed) {
         $feedTitle = (string) $feed['title'];
         $xmlUrl = (string) $feed['xmlUrl'];
         $htmlUrl = (string) $feed['htmlUrl'];
-        echo "Feed: {$feedTitle}\n";
-        echo "XML URL: {$xmlUrl}\n";
-        echo "HTML URL: {$htmlUrl}\n";
+
+        if ($DEBUG_MODE) {
+            echo "Feed: {$feedTitle}\n";
+            echo "XML URL: {$xmlUrl}\n";
+            echo "HTML URL: {$htmlUrl}\n";
+        }
 
         $rss = simplexml_load_file($xmlUrl);
 
@@ -58,10 +64,12 @@ foreach ($feeds->body->outline as $folder) {
             $itemPubDate = new DateTime($itemPubDateStr);
 
             if ($itemPubDate >= $lastChecked) {
-                echo "Title: {$itemTitle}\n";
-                echo "Link: {$itemLink}\n";
-                echo "Description: {$itemDescription}\n";
-                echo "Pub Date: {$itemPubDateStr}\n";
+                if ($DEBUG_MODE) {
+                    echo "Title: {$itemTitle}\n";
+                    echo "Link: {$itemLink}\n";
+                    echo "Description: {$itemDescription}\n";
+                    echo "Pub Date: {$itemPubDateStr}\n";
+                }
 
                 $subject = "{$itemTitle} :: Folder: {$folderTitle} :: Feed: {$feedTitle}";
 
@@ -76,8 +84,10 @@ foreach ($feeds->body->outline as $folder) {
                 $body .= "<p><a href=\"{$itemLink}\">Read more...</a></p>";
                 $body .= "</body></html>";
 
-                echo "Subject: {$subject}\n";
-                echo "Body: {$body}\n";
+                if ($DEBUG_MODE) {
+                    echo "Subject: {$subject}\n";
+                    echo "Body: {$body}\n";
+                }
 
                 $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, $feedTitle);
                 $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
@@ -86,10 +96,15 @@ foreach ($feeds->body->outline as $folder) {
                 $mail->AltBody = 'HTML messaging not supported';
 
                 if (!$mail->send()) {
-                    echo "Mailer Error: " . $mail->ErrorInfo;
+                    if ($DEBUG_MODE) {
+                        echo "Mailer Error: " . $mail->ErrorInfo;
+                    }
                 }
                 else {
-                    echo "Message sent!";
+                    if ($DEBUG_MODE) {
+                        echo "Message sent!";
+                    }
+
                     // Sleep for a second so as not to overwhelm the receiving server and (hopefully) avoid being marked as spam
                     sleep(1);
                 }

@@ -1,4 +1,7 @@
 <?php
+
+$DEBUG_MODE = false;
+
 $EMAIL_TO_NAME = "";
 $EMAIL_TO = "";
 $EMAIL_SMTP_FROM_EMAIL = "";
