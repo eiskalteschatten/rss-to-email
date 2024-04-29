@@ -87,9 +87,10 @@ foreach ($feeds->body->outline as $folder) {
         $feedXml = simplexml_load_string($content);
 
         $is_rss = $feedXml !== false && (is_array($feedXml->channel->item) || is_object($feedXml->channel->item)) && count($feedXml->channel->item) > 0;
+        $is_rdf = $feedXml !== false && (is_array($feedXml->item) || is_object($feedXml->item)) && count($feedXml->item) > 0;
         $is_atom = $feedXml !== false && (is_array($feedXml->entry) || is_object($feedXml->entry)) && count($feedXml->entry) > 0;
 
-        if ($SEND_EMAILS && !$is_rss && !$is_atom) {
+        if ($SEND_EMAILS && !$is_rss && !$is_rdf && !$is_atom) {
             $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
             $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, "RSS To Email");
             $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
@@ -100,15 +101,27 @@ foreach ($feeds->body->outline as $folder) {
             continue;
         }
 
-        $items = $is_rss ? $feedXml->channel->item : $feedXml->entry;
+        $items = [];
+
+        if ($is_rss) {
+            $items = $feedXml->channel->item;
+        }
+        elseif ($is_rdf) {
+            $items = $feedXml->item;
+        }
+        elseif ($is_atom) {
+            $items = $feedXml->entry;
+        }
+
+        $is_rss_rdf = $is_rss || $is_rdf;
 
         foreach ($items as $item) {
             $itemTitle = (string) $item->title;
             $itemTitle = html_entity_decode($itemTitle, ENT_QUOTES, 'UTF-8');
             $plainTextTitle = strip_tags($itemTitle);
-            $itemLink = (string) $is_rss ? $item->link : $item->link['href'];
-            $itemDescription = (string) $is_rss ? $item->description : $item->content;
-            $itemPubDateStr = (string) $is_rss ? $item->pubDate : $item->updated;
+            $itemLink = (string) $is_rss_rdf ? $item->link : $item->link['href'];
+            $itemDescription = (string) $is_rss_rdf ? $item->description : $item->content;
+            $itemPubDateStr = (string) $is_rss_rdf ? $item->pubDate : $item->updated;
 
             if ($DEBUG_MODE) {
                 echo "Title: {$itemTitle}\n";
