@@ -84,9 +84,16 @@ foreach ($feeds->body->outline as $folder) {
         curl_close($curl);
 
         libxml_use_internal_errors(true);
-        $rss = simplexml_load_string($content);
+        $feedXml = simplexml_load_string($content);
 
-        if ($SEND_EMAILS && ($rss === false || (!is_array($rss->channel->item) && !is_object($rss->channel->item)))) {
+        // var_dump($xmlUrl);
+        // var_dump($content);
+        // var_dump($feedXml);
+
+        $is_rss = $feedXml !== false && is_array($feedXml->channel->item) && is_object($feedXml->channel->item);
+        $is_atom = $feedXml !== false && is_array($feedXml->entry) && is_object($feedXml->entry);
+
+        if ($SEND_EMAILS && !$is_rss && !$is_atom) {
             $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
             $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, "RSS To Email");
             $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
@@ -97,24 +104,26 @@ foreach ($feeds->body->outline as $folder) {
             continue;
         }
 
-        foreach ($rss->channel->item as $item) {
+        $items = $is_rss ? $feedXml->channel->item : $feedXml->entry;
+
+        foreach ($items as $item) {
             $itemTitle = (string) $item->title;
             $itemTitle = html_entity_decode($itemTitle, ENT_QUOTES, 'UTF-8');
             $plainTextTitle = strip_tags($itemTitle);
-            $itemLink = (string) $item->link;
-            $itemDescription = (string) $item->description;
-            $itemPubDateStr = (string) $item->pubDate;
+            $itemLink = (string) $is_rss ? $item->link : $item->link['href'];
+            $itemDescription = (string) $is_rss ? $item->description : $item->content;
+            $itemPubDateStr = (string) $is_rss ? $item->pubDate : $item->updated;
+
+            if ($DEBUG_MODE) {
+                echo "Title: {$itemTitle}\n";
+                echo "Link: {$itemLink}\n";
+                echo "Description: {$itemDescription}\n";
+                echo "Pub Date: {$itemPubDateStr}\n";
+            }
 
             $itemPubDate = new DateTime($itemPubDateStr);
 
             if ($itemPubDate >= $lastChecked) {
-                if ($DEBUG_MODE) {
-                    echo "Title: {$itemTitle}\n";
-                    echo "Link: {$itemLink}\n";
-                    echo "Description: {$itemDescription}\n";
-                    echo "Pub Date: {$itemPubDateStr}\n";
-                }
-
                 try {
                     $stmt = $db->prepare("SELECT * FROM feeds_sent WHERE title = :title AND link = :link");
                     $stmt->bindValue(':title', $plainTextTitle);
@@ -188,7 +197,9 @@ foreach ($feeds->body->outline as $folder) {
         }
     }
 
-    echo "\n\n";
+    if ($DEBUG_MODE) {
+        echo "\n\n";
+    }
 }
 
 $now = new DateTime();
