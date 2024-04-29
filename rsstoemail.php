@@ -1,6 +1,9 @@
 <?php
 require_once "config.php";
 
+$twoWeeksAgo = new DateTime();
+$twoWeeksAgo->modify('-2 weeks');
+$lastChecked = file_exists(".lastchecked") ? new DateTime(file_get_contents(".lastchecked")) : $twoWeeksAgo;
 $feeds = simplexml_load_file("feeds.opml") or die("Unable to find the \"feeds.opml\" file!");
 
 foreach ($feeds->body->outline as $folder) {
@@ -27,13 +30,21 @@ foreach ($feeds->body->outline as $folder) {
             $itemTitle = (string) $item->title;
             $itemLink = (string) $item->link;
             $itemDescription = (string) $item->description;
-            $itemPubDate = (string) $item->pubDate;
-            echo "Title: {$itemTitle}\n";
-            echo "Link: {$itemLink}\n";
-            echo "Description: {$itemDescription}\n";
-            echo "Pub Date: {$itemPubDate}\n";
+            $itemPubDateStr = (string) $item->pubDate;
+
+            $itemPubDate = new DateTime($itemPubDateStr);
+
+            if ($itemPubDate >= $lastChecked) {
+                echo "Title: {$itemTitle}\n";
+                echo "Link: {$itemLink}\n";
+                echo "Description: {$itemDescription}\n";
+                echo "Pub Date: {$itemPubDateStr}\n";
+            }
         }
     }
 
     echo "\n\n";
 }
+
+$now = new DateTime();
+file_put_contents(".lastchecked", $now->format(DateTime::ATOM));
