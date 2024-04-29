@@ -1,3 +1,4 @@
 .lastchecked
 *.opml
 config.php
+feedcache.db

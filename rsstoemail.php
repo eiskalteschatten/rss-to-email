@@ -24,6 +24,23 @@ $mail->SMTPAuth = true;
 $mail->Username = $EMAIL_SMTP_USER;
 $mail->Password = $EMAIL_SMTP_PASSWORD;
 
+try {
+    $db = new PDO('sqlite:feedcache.db');
+
+    $stmt = $db->prepare("
+        CREATE TABLE IF NOT EXISTS feeds_sent (
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            link TEXT NOT NULL
+        )
+    ");
+
+    $stmt->execute();
+}
+catch (PDOException $e) {
+    echo $e->getMessage();
+}
+
 foreach ($feeds->body->outline as $folder) {
     $folderTitle = (string) $folder['title'];
 
@@ -82,6 +99,7 @@ foreach ($feeds->body->outline as $folder) {
         foreach ($rss->channel->item as $item) {
             $itemTitle = (string) $item->title;
             $itemTitle = html_entity_decode($itemTitle, ENT_QUOTES, 'UTF-8');
+            $plainTextTitle = strip_tags($itemTitle);
             $itemLink = (string) $item->link;
             $itemDescription = (string) $item->description;
             $itemPubDateStr = (string) $item->pubDate;
@@ -94,6 +112,21 @@ foreach ($feeds->body->outline as $folder) {
                     echo "Link: {$itemLink}\n";
                     echo "Description: {$itemDescription}\n";
                     echo "Pub Date: {$itemPubDateStr}\n";
+                }
+
+                try {
+                    $stmt = $db->prepare("SELECT * FROM feeds_sent WHERE title = :title AND link = :link");
+                    $stmt->bindValue(':title', $plainTextTitle);
+                    $stmt->bindValue(':link', $itemLink);
+                    $stmt->execute();
+                    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (count($results) > 0) {
+                        continue;
+                    }
+                }
+                catch (PDOException $e) {
+                    echo $e->getMessage();
                 }
 
                 $subject = "{$itemTitle} :: Folder: {$folderTitle} :: Feed: {$feedTitle}";
@@ -128,6 +161,16 @@ foreach ($feeds->body->outline as $folder) {
                 else {
                     if ($DEBUG_MODE) {
                         echo "Message sent!";
+                    }
+
+                    try {
+                        $stmt = $db->prepare("INSERT INTO feeds_sent (title, link) VALUES (:title, :link)");
+                        $stmt->bindValue(':title', $plainTextTitle);
+                        $stmt->bindValue(':link', $itemLink);
+                        $stmt->execute();
+                    }
+                    catch (PDOException $e) {
+                        echo $e->getMessage();
                     }
 
                     // Sleep for a second so as not to overwhelm the receiving server and (hopefully) avoid being marked as spam
