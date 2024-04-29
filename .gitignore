@@ -2,3 +2,4 @@
 *.opml
 config.php
 feedcache.db
+rsstoemail.log
