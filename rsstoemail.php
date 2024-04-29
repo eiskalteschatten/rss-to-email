@@ -86,12 +86,8 @@ foreach ($feeds->body->outline as $folder) {
         libxml_use_internal_errors(true);
         $feedXml = simplexml_load_string($content);
 
-        // var_dump($xmlUrl);
-        // var_dump($content);
-        // var_dump($feedXml);
-
-        $is_rss = $feedXml !== false && is_array($feedXml->channel->item) && is_object($feedXml->channel->item);
-        $is_atom = $feedXml !== false && is_array($feedXml->entry) && is_object($feedXml->entry);
+        $is_rss = $feedXml !== false && (is_array($feedXml->channel->item) || is_object($feedXml->channel->item)) && count($feedXml->channel->item) > 0;
+        $is_atom = $feedXml !== false && (is_array($feedXml->entry) || is_object($feedXml->entry)) && count($feedXml->entry) > 0;
 
         if ($SEND_EMAILS && !$is_rss && !$is_atom) {
             $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
