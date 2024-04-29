@@ -13,6 +13,16 @@ $twoWeeksAgo->modify('-2 weeks');
 $lastChecked = file_exists(".lastchecked") ? new DateTime(file_get_contents(".lastchecked")) : $twoWeeksAgo;
 $feeds = simplexml_load_file("feeds.opml") or die("Unable to find the \"feeds.opml\" file!");
 
+$mail = new PHPMailer;
+$mail->isSMTP();
+$mail->SMTPDebug = 0; // 0 = off (for production use) - 1 = client messages - 2 = client and server messages
+$mail->Host = $EMAIL_SMTP_HOST;
+$mail->Port = $EMAIL_SMTP_PORT;
+$mail->SMTPSecure = 'tls';
+$mail->SMTPAuth = true;
+$mail->Username = $EMAIL_SMTP_USER;
+$mail->Password = $EMAIL_SMTP_PASSWORD;
+
 foreach ($feeds->body->outline as $folder) {
     $folderTitle = (string) $folder['title'];
     echo "Folder: {$folderTitle}\n";
@@ -28,8 +38,13 @@ foreach ($feeds->body->outline as $folder) {
         $rss = simplexml_load_file($xmlUrl);
 
         if ($rss === false) {
-            // TODO: email the error
-            echo "Feed \"{$xmlUrl}\" could not be loaded!\n";
+            $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
+            $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, "RSS To Email");
+            $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
+            $mail->Subject = "RSS To Email Could Not Load Feed";
+            $mail->msgHTML($error);
+            $mail->AltBody = $error;
+            $mail->send();
             continue;
         }
 
@@ -64,15 +79,6 @@ foreach ($feeds->body->outline as $folder) {
                 echo "Subject: {$subject}\n";
                 echo "Body: {$body}\n";
 
-                $mail = new PHPMailer;
-                $mail->isSMTP();
-                $mail->SMTPDebug = 0; // 0 = off (for production use) - 1 = client messages - 2 = client and server messages
-                $mail->Host = $EMAIL_SMTP_HOST;
-                $mail->Port = $EMAIL_SMTP_PORT;
-                $mail->SMTPSecure = 'tls';
-                $mail->SMTPAuth = true;
-                $mail->Username = $EMAIL_SMTP_USER;
-                $mail->Password = $EMAIL_SMTP_PASSWORD;
                 $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, $feedTitle);
                 $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
                 $mail->Subject = $subject;
