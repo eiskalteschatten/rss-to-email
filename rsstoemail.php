@@ -42,7 +42,31 @@ foreach ($feeds->body->outline as $folder) {
             echo "HTML URL: {$htmlUrl}\n";
         }
 
-        $rss = simplexml_load_file($xmlUrl);
+        $curl_options = array(
+            CURLOPT_URL            => $xmlUrl, // set the feed URL
+            CURLOPT_RETURNTRANSFER => true,     // return web page
+            CURLOPT_HEADER         => false,    // don't return headers
+            CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+            CURLOPT_ENCODING       => "",       // handle all encodings
+            CURLOPT_USERAGENT      => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0", // something like Firefox
+            CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+            CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+            CURLOPT_TIMEOUT        => 120,      // timeout on response
+            CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+        );
+
+        $curl = curl_init();
+        curl_setopt_array($curl, $curl_options);
+        $content = curl_exec($curl);
+
+        if (curl_error($curl)) {
+            echo curl_error($curl);
+        }
+
+        curl_close($curl);
+
+        libxml_use_internal_errors(true);
+        $rss = simplexml_load_string($content);
 
         if ($rss === false) {
             $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
