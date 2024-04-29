@@ -8,9 +8,9 @@ require "PHPMailer/Exception.php";
 require "PHPMailer/PHPMailer.php";
 require "PHPMailer/SMTP.php";
 
-$twoWeeksAgo = new DateTime();
-$twoWeeksAgo->modify('-2 weeks');
-$lastChecked = file_exists(".lastchecked") ? new DateTime(file_get_contents(".lastchecked")) : $twoWeeksAgo;
+$oneWeekAgo = new DateTime();
+$oneWeekAgo->modify('-1 week');
+$lastChecked = file_exists(".lastchecked") ? new DateTime(file_get_contents(".lastchecked")) : $oneWeekAgo;
 $feeds = simplexml_load_file("feeds.opml") or die("Unable to find the \"feeds.opml\" file!");
 
 $mail = new PHPMailer;
