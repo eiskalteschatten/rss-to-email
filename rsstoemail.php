@@ -31,7 +31,8 @@ try {
         CREATE TABLE IF NOT EXISTS feeds_sent (
             id INTEGER PRIMARY KEY,
             title TEXT NOT NULL,
-            link TEXT NOT NULL
+            link TEXT NOT NULL,
+            date_sent DATETIME NOT NULL
         )
     ");
 
@@ -164,9 +165,12 @@ foreach ($feeds->body->outline as $folder) {
                     }
 
                     try {
-                        $stmt = $db->prepare("INSERT INTO feeds_sent (title, link) VALUES (:title, :link)");
+                        $now = new DateTime();
+
+                        $stmt = $db->prepare("INSERT INTO feeds_sent (title, link, date_sent) VALUES (:title, :link, :dateSent)");
                         $stmt->bindValue(':title', $plainTextTitle);
                         $stmt->bindValue(':link', $itemLink);
+                        $stmt->bindValue(':dateSent', $now->format(DateTime::ATOM));
                         $stmt->execute();
                     }
                     catch (PDOException $e) {
