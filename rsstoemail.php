@@ -8,10 +8,12 @@ require "PHPMailer/Exception.php";
 require "PHPMailer/PHPMailer.php";
 require "PHPMailer/SMTP.php";
 
+$fileDir = dirname(__FILE__);
+
 $oneWeekAgo = new DateTime();
 $oneWeekAgo->modify('-1 week');
-$lastChecked = file_exists(".lastchecked") ? new DateTime(file_get_contents(".lastchecked")) : $oneWeekAgo;
-$feeds = simplexml_load_file("feeds.opml") or die("Unable to find the \"feeds.opml\" file!");
+$lastChecked = file_exists("{$fileDir}/.lastchecked") ? new DateTime(file_get_contents("{$fileDir}/.lastchecked")) : $oneWeekAgo;
+$feeds = simplexml_load_file("{$fileDir}/feeds.opml") or die("Unable to find the \"feeds.opml\" file!");
 
 $mail = new PHPMailer;
 $mail->isSMTP();
@@ -25,7 +27,7 @@ $mail->Username = $EMAIL_SMTP_USER;
 $mail->Password = $EMAIL_SMTP_PASSWORD;
 
 try {
-    $db = new PDO('sqlite:feedcache.db');
+    $db = new PDO("sqlite:{$fileDir}/feedcache.db");
 
     $stmt = $db->prepare("
         CREATE TABLE IF NOT EXISTS feeds_sent (
@@ -212,4 +214,4 @@ foreach ($feeds->body->outline as $folder) {
 }
 
 $now = new DateTime();
-file_put_contents(".lastchecked", $now->format(DateTime::ATOM));
+file_put_contents("{$fileDir}/.lastchecked", $now->format(DateTime::ATOM));
