@@ -39,6 +39,19 @@ foreach ($feeds->body->outline as $folder) {
                 echo "Link: {$itemLink}\n";
                 echo "Description: {$itemDescription}\n";
                 echo "Pub Date: {$itemPubDateStr}\n";
+
+                $subject = "{$itemTitle} :: Folder: {$folderTitle} :: Feed: {$feedTitle}";
+
+                $body = "<html><body>";
+                $body .= "<h1>{$itemTitle}</h1>";
+                $body .= "<p><a href=\"{$itemLink}\">{$itemTitle}</a></p>";
+                $body .= "<p>{$itemPubDate->format('Y-m-d H:i:s')}</p>";
+                $body .= $itemDescription;
+                $body .= "<p><a href=\"{$itemLink}\">Read more...</a></p>";
+                $body .= "</body></html>";
+
+                echo "Subject: {$subject}\n";
+                echo "Body: {$body}\n";
             }
         }
     }
