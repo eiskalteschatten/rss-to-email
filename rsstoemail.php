@@ -9,21 +9,30 @@ foreach ($feeds->body->outline as $folder) {
 
     foreach ($folder->outline as $feed) {
         $feedTitle = (string) $feed['title'];
-        echo "Feed: {$feedTitle}\n";
         $xmlUrl = (string) $feed['xmlUrl'];
-        echo "XML URL: {$xmlUrl}\n";
         $htmlUrl = (string) $feed['htmlUrl'];
+        echo "Feed: {$feedTitle}\n";
+        echo "XML URL: {$xmlUrl}\n";
         echo "HTML URL: {$htmlUrl}\n";
 
         $rss = simplexml_load_file($xmlUrl);
 
         if ($rss === false) {
             // TODO: email the error
-            echo "Feed \"${xmlUrl}\" could not be loaded!\n";
+            echo "Feed \"{$xmlUrl}\" could not be loaded!\n";
             continue;
         }
 
-        var_dump($rss);
+        foreach ($rss->channel->item as $item) {
+            $itemTitle = (string) $item->title;
+            $itemLink = (string) $item->link;
+            $itemDescription = (string) $item->description;
+            $itemPubDate = (string) $item->pubDate;
+            echo "Title: {$itemTitle}\n";
+            echo "Link: {$itemLink}\n";
+            echo "Description: {$itemDescription}\n";
+            echo "Pub Date: {$itemPubDate}\n";
+        }
     }
 
     echo "\n\n";
