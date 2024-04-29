@@ -15,6 +15,7 @@ $feeds = simplexml_load_file("feeds.opml") or die("Unable to find the \"feeds.op
 
 $mail = new PHPMailer;
 $mail->isSMTP();
+$mail->CharSet = "UTF-8";
 $mail->SMTPDebug = 0; // 0 = off (for production use) - 1 = client messages - 2 = client and server messages
 $mail->Host = $EMAIL_SMTP_HOST;
 $mail->Port = $EMAIL_SMTP_PORT;
