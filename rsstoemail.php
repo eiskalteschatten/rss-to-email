@@ -86,7 +86,7 @@ foreach ($feeds->body->outline as $folder) {
         libxml_use_internal_errors(true);
         $rss = simplexml_load_string($content);
 
-        if ($rss === false || (!is_array($rss->channel->item) && !is_object($rss->channel->item))) {
+        if ($SEND_EMAILS && ($rss === false || (!is_array($rss->channel->item) && !is_object($rss->channel->item)))) {
             $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
             $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, "RSS To Email");
             $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
@@ -146,6 +146,10 @@ foreach ($feeds->body->outline as $folder) {
                 if ($DEBUG_MODE) {
                     echo "Subject: {$subject}\n";
                     echo "Body: {$body}\n";
+                }
+
+                if (!$SEND_EMAILS) {
+                    continue;
                 }
 
                 $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, $feedTitle);

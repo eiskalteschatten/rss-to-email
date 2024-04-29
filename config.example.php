@@ -1,6 +1,7 @@
 <?php
 
 $DEBUG_MODE = false;
+$SEND_EMAILS = true;
 
 $EMAIL_TO_NAME = "";
 $EMAIL_TO = "";
