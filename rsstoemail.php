@@ -153,7 +153,7 @@ foreach ($feeds->body->outline as $folder) {
                 $subject = "{$itemTitle} :: Folder: {$folderTitle} :: Feed: {$feedTitle}";
 
                 $body = "<html><body>";
-                $body .= "<h3><a href=\"{$itemLink}\">{$itemTitle}</a></h3>";
+                $body .= "<h2><a href=\"{$itemLink}\">{$itemTitle}</a></h2>";
                 $body .= "<p>";
                 $body .= "<a href=\"{$htmlUrl}\">{$feedTitle}</a>";
                 $body .= "&nbsp;&nbsp;∙&nbsp;&nbsp;";
