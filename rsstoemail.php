@@ -39,6 +39,16 @@ try {
     ");
 
     $stmt->execute();
+
+    $stmt = $db->prepare("
+        CREATE TABLE IF NOT EXISTS feed_errors (
+            id INTEGER PRIMARY KEY,
+            link TEXT NOT NULL,
+            date_occurred DATETIME NOT NULL
+        )
+    ");
+
+    $stmt->execute();
 }
 catch (PDOException $e) {
     echo $e->getMessage();
@@ -92,14 +102,18 @@ foreach ($feeds->body->outline as $folder) {
         $is_rdf = $feedXml !== false && (is_array($feedXml->item) || is_object($feedXml->item)) && count($feedXml->item) > 0;
         $is_atom = $feedXml !== false && (is_array($feedXml->entry) || is_object($feedXml->entry)) && count($feedXml->entry) > 0;
 
-        if ($SEND_EMAILS && !$is_rss && !$is_rdf && !$is_atom) {
-            $error = "Feed \"{$xmlUrl}\" could not be loaded!\n";
-            $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, "RSS To Email");
-            $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
-            $mail->Subject = "RSS To Email Could Not Load Feed";
-            $mail->msgHTML($error);
-            $mail->AltBody = $error;
-            $mail->send();
+        if (!$is_rss && !$is_rdf && !$is_atom) {
+            // $mail->setFrom($EMAIL_SMTP_FROM_EMAIL, "RSS To Email");
+            // $mail->addAddress($EMAIL_TO, $EMAIL_TO_NAME);
+            // $mail->Subject = "RSS To Email Could Not Load Feed";
+            // $mail->msgHTML($error);
+            // $mail->AltBody = $error;
+            // $mail->send();
+            $now = new DateTime();
+            $stmt = $db->prepare("INSERT INTO feed_errors (link, date_occurred) VALUES (:link, :dateOccurred)");
+            $stmt->bindValue(':link', $xmlUrl);
+            $stmt->bindValue(':dateOccurred', $now->format(DateTime::ATOM));
+            $stmt->execute();
             continue;
         }
 
